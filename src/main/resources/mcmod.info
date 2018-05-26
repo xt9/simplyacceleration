@@ -1,0 +1,16 @@
+[
+{
+  "modid": "simplyacceleration",
+  "name": "Simply Acceleration",
+  "description": "Adds the Accelerator, a machine that can increase the tickrate for bound tile entities.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["xt9 (IterationFunk)"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
