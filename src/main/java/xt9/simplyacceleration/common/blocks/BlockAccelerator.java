@@ -21,17 +21,35 @@ import javax.annotation.Nullable;
  * Created by xt9 on 2018-05-26.
  */
 public class BlockAccelerator extends BlockBase  implements ITileEntityProvider {
-    public static final BlockAccelerator INSTANCE = new BlockAccelerator();
     private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
     public BlockAccelerator() {
         super("accelerator", Material.ROCK);
+        setHardness(3f);
+        setResistance(5.0f);
+        setLightLevel(0.5F);
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityAccelerator tile = getTileEntity(world, pos);
-        SimplyAcceleration.proxy.openTileEntityGui(world, player, tile, pos);
+
+        if(!world.isRemote) {
+            if(!player.isSneaking()) {
+                world.notifyBlockUpdate(pos, state, state, 3);
+                player.openGui(SimplyAcceleration.instance, tile.getGuiID(), player.world, pos.getX(), pos.getY(), pos.getZ());
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
         return true;
     }
 

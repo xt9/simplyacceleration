@@ -1,16 +1,21 @@
 package xt9.simplyacceleration.client;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import xt9.simplyacceleration.SimplyConstants;
 import xt9.simplyacceleration.client.gui.AcceleratorGui;
+import xt9.simplyacceleration.client.gui.InformationOverlay;
+import xt9.simplyacceleration.client.particles.ParticleIndicator;
 import xt9.simplyacceleration.common.Registry;
 import xt9.simplyacceleration.common.ServerProxy;
-import xt9.simplyacceleration.common.tiles.IGuiTile;
 import xt9.simplyacceleration.common.tiles.TileEntityAccelerator;
 
 import javax.annotation.Nullable;
@@ -19,6 +24,9 @@ import javax.annotation.Nullable;
  * Created by xt9 on 2018-05-26.
  */
 public class ClientProxy extends ServerProxy {
+    @Override
+    public void preInit() {}
+
     @Nullable
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -36,11 +44,14 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
-    public void registerRenderers() {}
+    public void registerRenderers() {
+        MinecraftForge.EVENT_BUS.register(new InformationOverlay(Minecraft.getMinecraft()));
+    }
 
-    @Override
-    public void openTileEntityGui(World world, EntityPlayer player, IGuiTile te, BlockPos pos) {}
 
-    @Override
-    public void preInit() {}
+    public void spawnParticle(World world, double x, double y, double z, double mx, double my, double mz) {
+        Particle particle = new ParticleIndicator(world, x, y, z, mx, my, mz, 1.3F);
+        particle.setRBGColorF(1.0F, 1.0F, 0.2F);
+        Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+    }
 }

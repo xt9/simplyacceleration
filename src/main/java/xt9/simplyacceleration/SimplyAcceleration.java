@@ -2,7 +2,6 @@ package xt9.simplyacceleration;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -18,12 +17,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import xt9.simplyacceleration.common.Registry;
 import xt9.simplyacceleration.common.ServerProxy;
+import xt9.simplyacceleration.common.network.ClearAllLinkedMessage;
+import xt9.simplyacceleration.common.network.ToggleAcceleratorHighlighting;
+import xt9.simplyacceleration.common.network.UpdateAcceleratorTickMessage;
 
 /**
  * Created by xt9 on 2018-05-26.
  */
 @Mod(modid = SimplyConstants.MODID, version = SimplyConstants.VERSION, useMetadata = true, acceptedMinecraftVersions = "[1.12.2]")
+@Mod.EventBusSubscriber
 public class SimplyAcceleration {
+    private int networkID = 0;
+
     @Mod.Instance(SimplyConstants.MODID)
     public static SimplyAcceleration instance;
 
@@ -34,6 +39,10 @@ public class SimplyAcceleration {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        network = NetworkRegistry.INSTANCE.newSimpleChannel(SimplyConstants.MODID);
+        network.registerMessage(UpdateAcceleratorTickMessage.Handler.class, UpdateAcceleratorTickMessage.class, networkID++, Side.SERVER);
+        network.registerMessage(ToggleAcceleratorHighlighting.Handler.class, ToggleAcceleratorHighlighting.class, networkID++, Side.SERVER);
+        network.registerMessage(ClearAllLinkedMessage.Handler.class, ClearAllLinkedMessage.class, networkID++, Side.SERVER);
         proxy.preInit();
     }
 
@@ -59,9 +68,6 @@ public class SimplyAcceleration {
 
     @Mod.EventHandler
     public void load(FMLInitializationEvent event) {
-        // Register block, item, and particle renders after they have been initialized and
-        // registered in pre-init; however, Minecraft's RenderItem and ModelMesher instances
-        // must also be ready, so we have to register renders during init, not earlier
         proxy.registerRenderers();
     }
 
@@ -75,8 +81,7 @@ public class SimplyAcceleration {
         @SideOnly(Side.CLIENT)
         @Override
         public ItemStack getIconItemStack() {
-            // todo set something else here
-            return new ItemStack(Items.WOODEN_AXE);
+            return new ItemStack(Registry.blockAcceleratorItem);
         }
     };
 }

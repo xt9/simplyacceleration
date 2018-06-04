@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DND",
+    "EGE",
+    "DCD"
+  ],
+  "key": {
+    "D": { "item": "minecraft:dye", "data": 11 },
+    "N": { "item": "minecraft:nether_star", "data": 0 },
+    "E": { "item": "minecraft:ender_pearl", "data": 0 },
+    "G": { "item": "minecraft:concrete", "data": 7 },
+    "C": { "item": "minecraft:clock", "data": 0 }
+  },
+  "result": {
+    "item": "simplyacceleration:accelerator",
+    "count": 1
+  }
+}
